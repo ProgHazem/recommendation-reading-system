@@ -1,0 +1,47 @@
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_USERNAME=postgres
+      - POSTGRES_PASSWORD=VLJUjzhdjNIyMGAa
+      - POSTGRES_DB=recomindation_readings
+    container_name: postgres
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: recomandation_reading
+    environment:
+      - NODE_ENV=development
+      - PORT=4000
+      - POSTGRES_HOST=db
+      - POSTGRES_DATABASE=recomindation_readings
+      - POSTGRES_USERNAME=postgres
+      - POSTGRES_PASSWORD=VLJUjzhdjNIyMGAa
+      - POSTGRES_PORT=5432
+      - SSL=false
+      - REJECT_UNAUTHORIZED=false
+    ports:
+      - '4000:4000'
+    depends_on:
+      - db
+    volumes:
+      - ./src:/app/src
+
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    container_name: nest-pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=pgadmin4
+    ports:
+      - '9090:80'
+    depends_on:
+      - db
