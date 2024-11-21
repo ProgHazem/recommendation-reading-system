@@ -27,6 +27,10 @@ services:
       - POSTGRES_PORT=5432
       - SSL=false
       - REJECT_UNAUTHORIZED=false
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_ALGORITHM=RS256
+      - JWT_EXPIRES_IN=60m
+      - PASSWORD_SALT=${PASSWORD_SALT}
     ports:
       - '4000:4000'
     depends_on:

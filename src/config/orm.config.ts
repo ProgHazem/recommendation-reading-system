@@ -33,7 +33,7 @@ export const typeOrmModuleOptions: TypeOrmModuleOptions = {
       ? 'advanced-console'
       : 'simple-console',
   migrationsTableName: 'migrations',
-  migrations: ['dist/migrations/*.js'],
+  migrations: ['./src/database/migrations/*.js'],
 };
 
 export const OrmConfig = {
@@ -66,7 +66,7 @@ export const dataSource = new DataSource({
       ? 'advanced-console'
       : 'simple-console',
   migrationsTableName: 'migrations',
-  migrations: ['./migrations/*.{ts,js}'],
+  migrations: ['./src/database/migrations/*.{ts,js}'],
 });
 
 export default OrmConfig;

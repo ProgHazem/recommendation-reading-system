@@ -1,6 +1,8 @@
 export interface Configuration {
   app: AppSettings;
   postgresDatabase: PostgresDatabase;
+  jwt: JwtSettings;
+  password: PasswordSettings;
 }
 
 export interface AppSettings {
@@ -16,6 +18,31 @@ export interface PostgresDatabase {
   password: string;
   port: number;
   ssl: boolean | PostgresDatabaseSSL;
+}
+
+export interface JwtSettings {
+  jwtSecret: string;
+  algorithm: Algorithm;
+  expiresIn: string;
+}
+
+export type Algorithm =
+  | 'HS256'
+  | 'HS384'
+  | 'HS512'
+  | 'RS256'
+  | 'RS384'
+  | 'RS512'
+  | 'ES256'
+  | 'ES384'
+  | 'ES512'
+  | 'PS256'
+  | 'PS384'
+  | 'PS512'
+  | 'none';
+
+export interface PasswordSettings {
+  salt: string;
 }
 
 export interface PostgresDatabaseSSL {
@@ -47,5 +74,13 @@ export const configuration = (): Configuration => ({
             key: process.env.KEY,
           }
         : false,
+  },
+  jwt: {
+    jwtSecret: process.env.JWT_SECRET as string,
+    algorithm: process.env.JWT_ALGORITHM as Algorithm,
+    expiresIn: process.env.JWT_EXPIRES_IN as string,
+  },
+  password: {
+    salt: process.env.PASSWORD_SALT as string,
   },
 });
