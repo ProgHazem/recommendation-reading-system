@@ -75,6 +75,7 @@ describe('DashboardBooksController', () => {
           createdAt: new Date(),
           updatedAt: new Date(),
           deletedAt: null,
+          readingbooks: [],
         },
       };
       jest.spyOn(service, 'create').mockResolvedValue(result);
@@ -96,6 +97,7 @@ describe('DashboardBooksController', () => {
             createdAt: new Date(),
             updatedAt: new Date(),
             deletedAt: null,
+            readingbooks: [],
           },
         ],
         total: 1,

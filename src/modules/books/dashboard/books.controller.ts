@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
+  ApiBody,
   ApiOperation,
   ApiResponse,
   ApiTags,
@@ -40,6 +41,10 @@ export class DashboardBooksController {
     status: 400,
     description: 'Bad request, validation error.',
   })
+  @ApiBody({
+    description: 'creating a Book Dto',
+    type: BookDto,
+  })
   async create(@Body() createBookDto: BookDto) {
     return this.bookService.create(createBookDto);
   }
@@ -67,6 +72,10 @@ export class DashboardBooksController {
   @ApiResponse({
     status: 404,
     description: 'Book not found.',
+  })
+  @ApiBody({
+    description: 'updating a book dto',
+    type: BookDto,
   })
   async update(@Param('id') id: string, @Body() book: BookDto) {
     return this.bookService.update(id, book);

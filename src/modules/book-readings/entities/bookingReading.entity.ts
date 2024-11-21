@@ -1,32 +1,37 @@
-import Role from '@App/modules/auth/enums/role.enum';
-import { ReadingBook } from '@App/modules/book-readings/entities/bookingReading.entity';
+import { User } from '@App/modules/auth/entities/user.entity';
+import { Book } from '@App/modules/books/entities/book.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
-  OneToMany,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
+  Relation,
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity({ name: 'users' })
-export class User {
+@Entity({ name: 'reading_books' })
+export class ReadingBook {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ unique: true })
-  email: string;
+  @Column({ name: 'start_page' })
+  startPage: number;
 
-  @Column({})
-  password: string;
+  @Column({ name: 'end_page' })
+  endPage: number;
 
-  @Column({ enum: Role, type: 'enum', default: Role.USER })
-  role: Role;
+  @ManyToOne(() => User, (user) => user?.readingbooks)
+  @JoinColumn({ name: 'user_id' })
+  user: Relation<User>;
 
-  @OneToMany(() => ReadingBook, (readingBook) => readingBook.user)
-  readingbooks: ReadingBook[];
+  @ManyToOne(() => Book, (book) => book.readingbooks)
+  @JoinColumn({ name: 'book_id' })
+  book: Relation<Book>;
 
+  // Timestamp Columns
   @CreateDateColumn({
     type: 'timestamptz',
     default: () => 'CURRENT_TIMESTAMP',

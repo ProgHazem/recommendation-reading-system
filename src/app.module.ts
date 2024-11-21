@@ -12,7 +12,7 @@ import { CustomExceptionFilter } from '@App/modules/shared/filters/exception.fil
 import { typeOrmModuleOptions } from '@App/config/orm.config';
 import { AuthModule } from '@App/modules/auth/auth.module';
 import { BooksModule } from '@App/modules/books/books.module';
-import { BookReadingsModule } from './modules/book-readings/book-readings.module';
+import { BookReadingsModule } from '@App/modules/book-readings/book-readings.module';
 
 @Module({
   imports: [

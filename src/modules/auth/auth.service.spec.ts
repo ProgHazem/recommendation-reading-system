@@ -35,7 +35,7 @@ describe('AuthService', () => {
 
   // Mock user data
   const mockUser: User = {
-    id: 'user-id',
+    id: '1f194333-f9c9-43c2-b406-d8c03803867c',
     email: 'test@test.com',
     password:
       'a8a0a647dbfe56130794053756f98282f5255e7d374a88442b438ab8262ab49e8e36672083e5edfc8ea198fabdbed8de9d46acbd0b5e0276e41ad22e399463e8',
@@ -43,6 +43,7 @@ describe('AuthService', () => {
     createdAt: new Date(),
     updatedAt: new Date(),
     deletedAt: null,
+    readingbooks: [],
   };
 
   beforeEach(async () => {

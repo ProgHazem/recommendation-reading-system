@@ -49,6 +49,7 @@ describe('BooksService', () => {
         createdAt: new Date(),
         updatedAt: new Date(),
         deletedAt: null,
+        readingbooks: [],
       };
 
       repository.save.mockResolvedValue(savedBook);

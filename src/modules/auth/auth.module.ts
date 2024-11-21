@@ -7,10 +7,11 @@ import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtSettings } from '@App/config/configuration';
 import { EmailExistsValidator } from '@App/modules/auth/validators/email-exists.validator';
+import { ReadingBook } from '@App/modules/book-readings/entities/bookingReading.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, ReadingBook]),
     JwtModule.registerAsync({
       useFactory: async (config: ConfigService) => {
         const jwtConfig = config.get<JwtSettings>('jwt');

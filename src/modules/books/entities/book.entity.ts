@@ -1,9 +1,11 @@
+import { ReadingBook } from '@App/modules/book-readings/entities/bookingReading.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
   Index,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -20,6 +22,9 @@ export class Book {
 
   @Column({ name: 'number_of_pages' })
   numberOfPages: number;
+
+  @OneToMany(() => ReadingBook, (readingBook) => readingBook.book)
+  readingbooks: ReadingBook[];
 
   // Timestamp Columns
   @CreateDateColumn({
