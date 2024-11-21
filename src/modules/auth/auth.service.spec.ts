@@ -101,7 +101,6 @@ describe('AuthService', () => {
       mockJwtService.signAsync.mockResolvedValue('mockToken');
 
       const response = await authService.login(loginDto);
-      console.log({ response });
 
       expect(response).toHaveProperty('user');
 

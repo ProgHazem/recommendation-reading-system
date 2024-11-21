@@ -3,4 +3,5 @@ export interface IResponse<T> {
   errors?: string | string[] | object | null;
   message?: string | null;
   statusCode?: number | null;
+  statusMessage?: string | null;
 }

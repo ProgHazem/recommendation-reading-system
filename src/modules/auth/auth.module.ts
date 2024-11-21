@@ -31,6 +31,6 @@ import { EmailExistsValidator } from '@App/modules/auth/validators/email-exists.
   ],
   controllers: [AuthController],
   providers: [AuthService, EmailExistsValidator],
-  exports: [AuthService, EmailExistsValidator],
+  exports: [AuthService, EmailExistsValidator, JwtModule],
 })
 export class AuthModule {}

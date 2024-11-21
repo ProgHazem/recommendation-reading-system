@@ -1,5 +1,10 @@
 import { ROLES } from '@App/modules/auth/decorators/role.decarator';
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import Role from '@App/modules/auth/enums/role.enum';
 
@@ -18,6 +23,15 @@ export class RoleGuard implements CanActivate {
     }
 
     const { user } = context.switchToHttp().getRequest();
-    return requiredRoles.some((role) => user.role == role);
+
+    const hasRole = requiredRoles.some((role) => user.role === role);
+
+    if (!hasRole) {
+      console.log('hasRole', hasRole);
+
+      throw new ForbiddenException("Don't have limit access");
+    }
+
+    return true;
   }
 }

@@ -3,7 +3,7 @@ import { RegisterDto } from '@App/modules/auth/dto/register.dto';
 import { User } from '@App/modules/auth/entities/user.entity';
 import Role from '@App/modules/auth/enums/role.enum';
 import { IAuthResponse } from '@App/modules/auth/interfaces/auth-response.interface';
-import { IResponse } from '@App/modules/shared/utils/response-interface';
+import { IResponse } from '@App/modules/shared/interfaces/response.interface';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -50,6 +50,7 @@ export class AuthService {
           expiresIn: await this.configService.get('jwt.expiresIn'),
         },
         message: 'Successfully Registered',
+        statusMessage: 'success',
       };
     } catch (error) {
       throw error;
@@ -82,6 +83,8 @@ export class AuthService {
           accessToken: await this.generateToken(user.id, user.role),
           expiresIn: await this.configService.get('jwt.expiresIn'),
         },
+        statusMessage: 'success',
+        message: 'Successfully Logged In',
       };
     } catch (error) {
       throw error;

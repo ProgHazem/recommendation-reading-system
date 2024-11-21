@@ -11,6 +11,8 @@ import { configuration } from '@App/config/configuration';
 import { CustomExceptionFilter } from '@App/modules/shared/filters/exception.filter';
 import { typeOrmModuleOptions } from '@App/config/orm.config';
 import { AuthModule } from '@App/modules/auth/auth.module';
+import { BooksModule } from '@App/modules/books/books.module';
+import { BookReadingsModule } from './modules/book-readings/book-readings.module';
 
 @Module({
   imports: [
@@ -28,6 +30,8 @@ import { AuthModule } from '@App/modules/auth/auth.module';
       }),
     }),
     AuthModule,
+    BooksModule,
+    BookReadingsModule,
   ],
   controllers: [AppController],
   providers: [

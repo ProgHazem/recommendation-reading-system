@@ -1,15 +1,17 @@
-import { IResponse } from '@App/modules/shared/utils/response-interface';
+import { IResponse } from '@App/modules/shared/interfaces/response.interface';
 import {
   ArgumentsHost,
   Catch,
   ExceptionFilter,
-  HttpStatus,
+  HttpException,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 
 @Catch()
-export class CustomExceptionFilter<T extends Error> implements ExceptionFilter {
+export class CustomExceptionFilter<T extends HttpException>
+  implements ExceptionFilter
+{
   constructor(
     @InjectPinoLogger(CustomExceptionFilter.name)
     private readonly logger: PinoLogger,
@@ -18,6 +20,7 @@ export class CustomExceptionFilter<T extends Error> implements ExceptionFilter {
     const context = host.switchToHttp();
     const request = context.getRequest<Request>();
     const response = context.getResponse<Response>();
+    const status = exception.getStatus();
 
     this.logger.error({
       request: { ...request },
@@ -25,10 +28,11 @@ export class CustomExceptionFilter<T extends Error> implements ExceptionFilter {
       exception: { ...exception },
     });
 
-    response.status(HttpStatus.INTERNAL_SERVER_ERROR).send(<IResponse<string>>{
-      errors: { ...exception },
+    response.status(status).send(<IResponse<string>>{
+      error: exception.name,
       message: exception.message,
-      statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+      statusCode: status,
+      statusMessage: 'failed',
     });
   }
 }
