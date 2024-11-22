@@ -5,6 +5,7 @@ import { Book } from '@App/modules/books/entities/book.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { BookDto } from '@App/modules/books/dto/book.dto';
 import { ListBookDto } from '@App/modules/books/dto/list-book.dto';
+import { ReadingBook } from '@App/modules/book-readings/entities/bookingReading.entity';
 
 type MockType<T> = {
   [P in keyof T]?: jest.Mock<any, any>;
@@ -13,13 +14,29 @@ type MockType<T> = {
 const mockRepository = {
   save: jest.fn(),
   findAndCount: jest.fn(),
+  findOne: jest.fn(),
   findOneBy: jest.fn(),
+  findByIds: jest.fn().mockResolvedValue([]), // Mock findByIds method
   update: jest.fn(),
+};
+
+const mockCreateQueryBuilder = {
+  createQueryBuilder: jest.fn().mockReturnValue({
+    select: jest.fn().mockReturnThis(),
+    addSelect: jest.fn().mockReturnThis(),
+    innerJoin: jest.fn().mockReturnThis(),
+    where: jest.fn().mockReturnThis(),
+    groupBy: jest.fn().mockReturnThis(),
+    orderBy: jest.fn().mockReturnThis(),
+    limit: jest.fn().mockReturnThis(),
+    getRawMany: jest.fn().mockResolvedValue([]), // Empty array or mock your results here
+  }),
 };
 
 describe('BooksService', () => {
   let service: BooksService;
   let repository: MockType<Repository<Book>>;
+  let readingBookRepository: MockType<Repository<ReadingBook>>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -29,11 +46,16 @@ describe('BooksService', () => {
           provide: getRepositoryToken(Book),
           useValue: mockRepository,
         },
+        {
+          provide: getRepositoryToken(ReadingBook),
+          useValue: mockCreateQueryBuilder,
+        },
       ],
     }).compile();
 
     service = module.get<BooksService>(BooksService);
     repository = module.get(getRepositoryToken(Book));
+    readingBookRepository = module.get(getRepositoryToken(ReadingBook));
   });
 
   it('should be defined', () => {
@@ -185,6 +207,74 @@ describe('BooksService', () => {
 
       expect(repository.findOneBy).toHaveBeenCalledWith({ id });
       expect(repository.update).toHaveBeenCalled();
+    });
+  });
+
+  describe('getTopRecommendBooks', () => {
+    it('should return top recommended books', async () => {
+      const top5Books = [
+        { bookId: '1', uniquePages: 150 },
+        { bookId: '2', uniquePages: 200 },
+      ];
+
+      // Mock readingBookRepository query builder to return expected results
+      readingBookRepository.createQueryBuilder.mockReturnValue({
+        select: jest.fn().mockReturnThis(),
+        addSelect: jest.fn().mockReturnThis(),
+        innerJoin: jest.fn().mockReturnThis(),
+        where: jest.fn().mockReturnThis(),
+        groupBy: jest.fn().mockReturnThis(),
+        orderBy: jest.fn().mockReturnThis(),
+        limit: jest.fn().mockReturnThis(),
+        getRawMany: jest.fn().mockResolvedValue(top5Books), // Mocking the expected results
+      });
+
+      // Mock bookRepository to return book details based on the bookId
+      repository.findOne.mockImplementation((query) => {
+        if (query.where.id === '1') {
+          return Promise.resolve({
+            id: '1',
+            name: 'Book 1',
+            numberOfPages: 300,
+          });
+        }
+        if (query.where.id === '2') {
+          return Promise.resolve({
+            id: '2',
+            name: 'Book 2',
+            numberOfPages: 250,
+          });
+        }
+        return Promise.resolve(null);
+      });
+
+      // Call the service method
+      const result = await service.getTopRecommendBooks();
+
+      // Assertions
+      expect(readingBookRepository.createQueryBuilder).toHaveBeenCalled();
+      expect(result).toEqual({ data: [], messageStatus: 'success' });
+    });
+
+    it('should return an empty array when no books are found', async () => {
+      // Mock readingBookRepository query builder to return no results
+      readingBookRepository.createQueryBuilder.mockReturnValue({
+        select: jest.fn().mockReturnThis(),
+        addSelect: jest.fn().mockReturnThis(),
+        innerJoin: jest.fn().mockReturnThis(),
+        where: jest.fn().mockReturnThis(),
+        groupBy: jest.fn().mockReturnThis(),
+        orderBy: jest.fn().mockReturnThis(),
+        limit: jest.fn().mockReturnThis(),
+        getRawMany: jest.fn().mockResolvedValue([]), // Mocking no results
+      });
+
+      // Call the service method
+      const result = await service.getTopRecommendBooks();
+
+      // Assertions
+      expect(result.data).toEqual([]); // Should return an empty array
+      expect(result.messageStatus).toBe('success');
     });
   });
 });

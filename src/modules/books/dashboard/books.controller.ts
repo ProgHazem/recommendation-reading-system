@@ -80,4 +80,15 @@ export class DashboardBooksController {
   async update(@Param('id') id: string, @Body() book: BookDto) {
     return this.bookService.update(id, book);
   }
+
+  @Get('/recommend-books')
+  @ApiOperation({ summary: 'Get top recommend Books' })
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully retrieved top recommend Books',
+    type: '[ITopRecemendBookResponse]',
+  })
+  async getTopRecommendBooks() {
+    return await this.bookService.getTopRecommendBooks();
+  }
 }

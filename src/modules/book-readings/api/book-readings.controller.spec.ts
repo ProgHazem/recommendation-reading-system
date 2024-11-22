@@ -58,7 +58,10 @@ describe('BookReadingsController', () => {
       bookId: '1f194333-f9c9-43c2-b406-d8c03803867c',
     };
 
-    const mockUser = { id: '1', role: Role.USER };
+    const mockUser = {
+      id: '1f194333-f9c9-43c2-b406-d8c03803867c',
+      role: Role.USER,
+    };
 
     // Mock request object with the custom interface
     const request: Partial<CustomRequest> = {

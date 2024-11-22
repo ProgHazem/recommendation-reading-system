@@ -6,6 +6,7 @@ import { ListBookDto } from '@App/modules/books/dto/list-book.dto';
 import Role from '@App/modules/auth/enums/role.enum';
 import { ExecutionContext } from '@nestjs/common';
 import { BooksController } from '@App/modules/books/api/books.controller';
+import { ITopRecemendBookResponse } from '@App/modules/books/interfaces/top-recommend-books.interface';
 
 describe('BooksController', () => {
   let controller: BooksController;
@@ -22,6 +23,7 @@ describe('BooksController', () => {
               { id: '1', name: 'Book 1', numberOfPages: 200 },
               { id: '2', name: 'Book 2', numberOfPages: 150 },
             ]),
+            getTopRecommendBooks: jest.fn(),
           },
         },
       ],
@@ -59,6 +61,53 @@ describe('BooksController', () => {
         { id: '1', name: 'Book 1', numberOfPages: 200 },
         { id: '2', name: 'Book 2', numberOfPages: 150 },
       ]);
+    });
+  });
+  describe('getTopRecommendBooks', () => {
+    it('should return top recommended books', async () => {
+      const recommendedBooks: ITopRecemendBookResponse[] = [
+        {
+          bookId: '1',
+          bookName: 'Book 1',
+          numOfPages: 300,
+          numOfReadPages: 150,
+        },
+        {
+          bookId: '2',
+          bookName: 'Book 2',
+          numOfPages: 300,
+          numOfReadPages: 200,
+        },
+      ];
+
+      // Assuming that IResponse has a data property
+      const expectedResult = {
+        data: recommendedBooks,
+        messageStatus: 'success',
+      }; // Wrap the result in an object that matches IResponse
+
+      jest
+        .spyOn(service, 'getTopRecommendBooks')
+        .mockResolvedValue(expectedResult);
+
+      expect(await controller.getTopRecommendBooks()).toEqual(expectedResult);
+      expect(service.getTopRecommendBooks).toHaveBeenCalled();
+    });
+
+    it('should return an empty array when no books are found', async () => {
+      const recommendedBooks: ITopRecemendBookResponse[] = [];
+
+      const expectedResult = {
+        data: recommendedBooks,
+        messageStatus: 'success',
+      }; // Wrap the empty array in the IResponse object
+
+      jest
+        .spyOn(service, 'getTopRecommendBooks')
+        .mockResolvedValue(expectedResult);
+
+      expect(await controller.getTopRecommendBooks()).toEqual(expectedResult);
+      expect(service.getTopRecommendBooks).toHaveBeenCalled();
     });
   });
 });

@@ -38,7 +38,8 @@ export class BookReadingsService {
 
     const readingInterval = {
       ...storeReadingIntervalDto,
-      userId: user.id,
+      user: user,
+      book: book,
     };
 
     const createdReadingInterval =

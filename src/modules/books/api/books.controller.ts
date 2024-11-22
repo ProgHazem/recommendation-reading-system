@@ -34,4 +34,15 @@ export class BooksController {
   async findAll(@Query() bookFilterDto: ListBookDto) {
     return this.bookService.findAll(bookFilterDto);
   }
+
+  @Get('/recommend-books')
+  @ApiOperation({ summary: 'Get top recommend Books' })
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully retrieved top recommend Books',
+    type: '[ITopRecemendBookResponse]',
+  })
+  async getTopRecommendBooks() {
+    return await this.bookService.getTopRecommendBooks();
+  }
 }

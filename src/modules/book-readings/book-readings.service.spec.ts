@@ -72,7 +72,8 @@ describe('BookReadingsService', () => {
       expect(mockReadingBookRepository.save).toHaveBeenCalledWith({
         startPage: mockDto.startPage,
         endPage: mockDto.endPage,
-        userId: mockUser.id,
+        user: mockUser,
+        book: mockBook,
       });
       expect(result).toEqual({
         data: mockCreatedInterval,

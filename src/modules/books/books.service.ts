@@ -1,3 +1,4 @@
+import { ReadingBook } from '@App/modules/book-readings/entities/bookingReading.entity';
 import { BookDto } from '@App/modules/books/dto/book.dto';
 import { ListBookDto } from '@App/modules/books/dto/list-book.dto';
 import { Book } from '@App/modules/books/entities/book.entity';
@@ -11,6 +12,8 @@ import { Repository } from 'typeorm';
 export class BooksService {
   constructor(
     @InjectRepository(Book) private readonly bookRepository: Repository<Book>,
+    @InjectRepository(ReadingBook)
+    private readonly readingBookRepository: Repository<ReadingBook>,
   ) {}
   async create(bookDto: BookDto) {
     const book = await this.bookRepository.save(bookDto);
@@ -59,5 +62,39 @@ export class BooksService {
       message: 'Book updated successfully',
       statusMessage: 'success',
     };
+  }
+
+  async getTopRecommendBooks() {
+    const topRecommendBooks = await this.readingBookRepository
+      .createQueryBuilder('re')
+      .select('re.book_id', 'bookId')
+      .addSelect('SUM(re.end_page - re.start_page + 1)', 'uniquePages')
+      .innerJoin(Book, 'book', 'book.id = re.book_id')
+      .where('re.deleted_at IS NULL AND book.deleted_at IS NULL')
+      .groupBy('re.book_id')
+      .orderBy('SUM(re.end_page - re.start_page + 1)', 'DESC') // Corrected here
+      .limit(5)
+      .getRawMany();
+
+    // Fetch all book details in a single query for optimization
+    const bookIds = topRecommendBooks.map((topBook) => topBook.bookId);
+    const books = await this.bookRepository.findByIds(bookIds);
+
+    // Map the raw data to the response structure
+    const result = topRecommendBooks
+      .map((topBook) => {
+        const book = books.find((b) => b.id === topBook.bookId);
+        return book
+          ? {
+              bookId: book.id,
+              bookName: book.name,
+              numOfPages: book.numberOfPages,
+              numOfReadPages: topBook.uniquePages,
+            }
+          : null;
+      })
+      .filter((book) => book !== null);
+
+    return { data: result, messageStatus: 'success' };
   }
 }
