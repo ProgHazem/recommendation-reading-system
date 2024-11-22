@@ -65,6 +65,22 @@ class EnvironmentVariables {
   @IsNotEmpty()
   @IsString()
   KEY?: string;
+
+  @IsNotEmpty()
+  @IsString()
+  JWT_SECRET: string;
+
+  @IsNotEmpty()
+  @IsString()
+  JWT_ALGORITHM: Algorithm;
+
+  @IsNotEmpty()
+  @IsString()
+  JWT_EXPIRES_IN: string;
+
+  @IsNotEmpty()
+  @IsString()
+  PASSWORD_SALT: string;
 }
 
 export function validate(

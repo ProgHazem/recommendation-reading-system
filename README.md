@@ -132,6 +132,10 @@ sequenceDiagram
     ```sh
     cd recommendation-reading-system
     ```
+3. Copy .env.example to .env:
+    ```sh
+    cp .env.example .env
+    ```
 
 ### Using Docker
 1. Build and run the Docker containers:
