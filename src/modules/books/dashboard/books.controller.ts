@@ -86,7 +86,6 @@ export class DashboardBooksController {
   @ApiResponse({
     status: 200,
     description: 'Successfully retrieved top recommend Books',
-    type: '[ITopRecemendBookResponse]',
   })
   async getTopRecommendBooks() {
     return await this.bookService.getTopRecommendBooks();
