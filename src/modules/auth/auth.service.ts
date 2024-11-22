@@ -110,8 +110,6 @@ export class AuthService {
   }
 
   private async generateHashPassword(password: string) {
-    console.log({ password: await this.configService.get('password.salt') });
-
     return pbkdf2Sync(
       password,
       await this.configService.get('password.salt'),
