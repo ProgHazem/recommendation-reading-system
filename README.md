@@ -138,12 +138,12 @@ sequenceDiagram
     ```sh
     docker-compose up --build
     ```
-    This will create and start three containers: `postgres`, `pgadmin`, and the application container `recommendation_reading`.
+    This will create and start three containers: `postgres`, `pgadmin`, and the application container `recomandation_reading`.
 
 ### Running Migrations
 1. Run the database migrations:
     ```sh
-    docker exec -it recommendation_reading bash
+    docker exec -it recomandation_reading bash
     npm run migrate:up
     ```
 
@@ -152,14 +152,14 @@ sequenceDiagram
     - Email: `admin@admin.com`
     - Password: `Octane@123`
     ```sh
-    docker exec -it recommendation_reading bash
+    docker exec -it recomandation_reading bash
     npm run seed
     ```
 
 ### Running Tests
 1. Run the test suite:
     ```sh
-    docker exec -it recommendation_reading bash
+    docker exec -it recomandation_reading bash
     npm run test
     ```
 
