@@ -17,9 +17,7 @@ describe('BookReadingsService', () => {
 
   let queryBuilderMock: any;
 
-
   beforeEach(async () => {
-
     queryBuilderMock = {
       where: jest.fn().mockReturnThis(),
       andWhere: jest.fn().mockReturnThis(),
