@@ -4,6 +4,7 @@ import {
   Catch,
   ExceptionFilter,
   HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
@@ -20,7 +21,7 @@ export class CustomExceptionFilter<T extends HttpException>
     const context = host.switchToHttp();
     const request = context.getRequest<Request>();
     const response = context.getResponse<Response>();
-    const status = exception.getStatus();
+    const status = exception?.getStatus?.() ?? HttpStatus.INTERNAL_SERVER_ERROR;
 
     this.logger.error({
       request: { ...request },

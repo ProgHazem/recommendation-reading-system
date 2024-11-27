@@ -29,6 +29,19 @@ export class BookReadingsService {
       throw new NotFoundException(`There's no book with this id: ${bookId}`);
     }
 
+    const hasOverlap = await this.checkOverlap(
+      bookId,
+      user.id,
+      storeReadingIntervalDto.startPage,
+      storeReadingIntervalDto.endPage,
+    );
+
+    if (hasOverlap) {
+      throw new BadRequestException(
+        'Overlapping interval detected for this book.',
+      );
+    }
+
     // double check if endPage bigger than bookPages
     if (storeReadingIntervalDto.endPage > book.numberOfPages) {
       throw new BadRequestException(
@@ -50,5 +63,23 @@ export class BookReadingsService {
       message: 'Successfully created reading Book interval',
       statusMessage: 'success',
     };
+  }
+
+  private async checkOverlap(
+    bookId: string,
+    userId: string,
+    startPage: number,
+    endPage: number,
+  ): Promise<boolean> {
+    const overlap = await this.readingIntervalRepository
+      .createQueryBuilder('re')
+      .where('re.book_id = :bookId', { bookId })
+      .andWhere('re.book_id = :bookId', { bookId })
+      .andWhere('re.deleted_at IS NULL')
+      .andWhere(':startPage <= re.end_page', { startPage })
+      .andWhere(':endPage >= re.start_page', { endPage })
+      .getOne();
+
+    return !!overlap;
   }
 }

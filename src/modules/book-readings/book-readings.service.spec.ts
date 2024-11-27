@@ -15,9 +15,20 @@ describe('BookReadingsService', () => {
   >;
   let mockBookRepository: Partial<Record<keyof Repository<Book>, jest.Mock>>;
 
+  let queryBuilderMock: any;
+
+
   beforeEach(async () => {
+
+    queryBuilderMock = {
+      where: jest.fn().mockReturnThis(),
+      andWhere: jest.fn().mockReturnThis(),
+      getOne: jest.fn(),
+    };
+
     mockReadingBookRepository = {
       save: jest.fn(),
+      createQueryBuilder: jest.fn().mockReturnValue(queryBuilderMock),
     };
     mockBookRepository = {
       findOne: jest.fn(),
